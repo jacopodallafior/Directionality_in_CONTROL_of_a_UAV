@@ -4,6 +4,7 @@
 **Institution:** University of Trento  
 **Stack:** ROS 2, PX4 Autopilot, Eigen, OSQP
 
+[![Read the Report](https://img.shields.io/badge/PDF-Read%20Full%20Report-red?logo=adobe-acrobat-reader&logoColor=white)](./UVReport_JacopoDallafior.pdf)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![ROS2](https://img.shields.io/badge/ROS2-Humble%2FFoxy-blue)
 ![PX4](https://img.shields.io/badge/PX4-v1.14+-orange)
@@ -53,8 +54,8 @@ $$
 $$
 
 **Subject to:**
-* $0 \le \bm u \le 1$ (Motor physical limits)
-* $-\Delta \le \bm u - \bm u_{prev} \le \Delta$ (Slew rate limits)
+* $0 \le u \le 1$ (Motor physical limits)
+* $-\Delta \le  u -  u_{prev} \le \Delta$ (Slew rate limits)
 
 **Why this matters:**
 The term $|| P_{\perp} B_{rp}\bm u ||^2$ penalizes deviations from the *direction* of the desired roll-pitch torque. If the drone cannot produce the full required torque, it scales the magnitude down but **keeps the angle correct**, ensuring the drone doesn't tumble or drift sideways.
@@ -77,7 +78,13 @@ Under sustained saturation (~80% of the flight), the QP allocator maintains traj
 | Standard Mixer (CFI) | 14.25 | **5.52°** | **5.68°** | 51.4% |
 
 **Key Finding:** The QP allocator reduces attitude error significantly and maintains directional alignment almost 100% of the time, even when motors are maxed out.
+---
+## 📄 Reference
+This code is based on the research performed at the University of Trento.
 
+> **J. Dallafior**, "A Dual-Layer Cascaded PID with Multi-Mixing Allocation Control with Direction Preservation for UAV Offboard Control Using ROS2 and PX4," *University of Trento*, 2025.
+
+📄 **[Download the Full Report (PDF)](./UVReport_JacopoDallafior.pdf)**
 ---
 
 ## 🛠️ Installation & Usage
