@@ -97,10 +97,10 @@ This code is based on the research performed at the University of Trento.
 
 ### Build
 ```bash
-# Clone the repository
+# Clone the repository and switch to the correct branch
 mkdir -p uav_control_ws/src
 cd uav_control_ws/src
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
+git clone -b CODETRY [https://github.com/jacopodallafior/ros2init/tree/CODETRY.git](https://github.com/jacopodallafior/ros2init/tree/CODETRY.git)
 
 # Install OSQP (if not strictly linked in CMake)
 # Ensure Eigen is available
