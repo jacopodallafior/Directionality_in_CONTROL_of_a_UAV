@@ -45,7 +45,7 @@ $$\boldsymbol{\tau} = K_\eta^p \mathbf{e}_\eta + K_\eta^i \mathbf{I}_\eta - K_\o
 
 ## 🧠 The QP Allocator
 
-Standard mixers (Closed-Form Inversion) fail when motors saturate, often clipping commands arbitrarily which leads to trajectory drift. This project uses a **Quadratic Program** to optimize the motor commands $\bm u$.
+Standard mixers (Closed-Form Inversion) fail when motors saturate, often clipping commands arbitrarily which leads to trajectory drift. This project uses a **Quadratic Program** to optimize the motor commands $u$.
 
 We solve the following minimization problem at every control cycle:
 
@@ -58,7 +58,7 @@ $$
 * $-\Delta \le  u -  u_{prev} \le \Delta$ (Slew rate limits)
 
 **Why this matters:**
-The term $|| P_{\perp} B_{rp}\bm u ||^2$ penalizes deviations from the *direction* of the desired roll-pitch torque. If the drone cannot produce the full required torque, it scales the magnitude down but **keeps the angle correct**, ensuring the drone doesn't tumble or drift sideways.
+The term $|| P_{\perp} B_{rp} u ||^2$ penalizes deviations from the *direction* of the desired roll-pitch torque. If the drone cannot produce the full required torque, it scales the magnitude down but **keeps the angle correct**, ensuring the drone doesn't tumble or drift sideways.
 
 ---
 
