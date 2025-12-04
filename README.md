@@ -33,23 +33,23 @@ The controller communicates with PX4 via the microRTPS/uXRCE-DDS bridge, publish
 *Figure: Overview of the cascaded control structure and allocation logic.*
 
 ### 1. Outer Loop (Translational)
-The outer loop computes the desired acceleration vector in the NED frame. It uses conditional integration for anti-windup.
-$$\bm a_r = \bm a_d + K_p(\bm p_d - \bm p) + K_d(\bm v_d - \bm v) + K_i \bm I_p$$
+The outer loop computes the desired acceleration vector in the NED frame. [cite_start]It uses conditional integration for anti-windup[cite: 50, 51].
+$$\mathbf{a}_r = \mathbf{a}_d + K_p(\mathbf{p}_d - \mathbf{p}) + K_d(\mathbf{v}_d - \mathbf{v}) + K_i \mathbf{I}_p$$
 
 ### 2. Inner Loop (Rotational)
-The desired acceleration is mapped to a specific force and target attitude (Tilt & Yaw). The inner loop tracks this attitude using a PID on Euler errors augmented with body-rate damping.
-$$\bm \tau = K_\eta^p \bm e_\eta + K_\eta^i \bm I_\eta - K_\omega^d \bm \omega_{lpf}$$
+The desired acceleration is mapped to a specific force and target attitude (Tilt & Yaw). [cite_start]The inner loop tracks this attitude using a PID on Euler errors augmented with body-rate damping[cite: 74, 75].
+$$\boldsymbol{\tau} = K_\eta^p \mathbf{e}_\eta + K_\eta^i \mathbf{I}_\eta - K_\omega^d \boldsymbol{\omega}_{lpf}$$
 
 ---
 
-## 🧠 The QP Allocator (The "Secret Sauce")
+## 🧠 The QP Allocator
 
 Standard mixers (Closed-Form Inversion) fail when motors saturate, often clipping commands arbitrarily which leads to trajectory drift. This project uses a **Quadratic Program** to optimize the motor commands $\bm u$.
 
 We solve the following minimization problem at every control cycle:
 
 $$
-\min_{\bm u} \quad \frac{1}{2}|| C(B\bm u - \bm w_{des}) ||^2 + \frac{\lambda_{dir}}{2}|| P_{\perp} B_{rp}\bm u ||^2 + \frac{\rho_v}{2}|| \bm u - \bm u_{prev} ||^2
+\min_{\mathbf{u}} \quad \frac{1}{2} \| C(B\mathbf{u} - \mathbf{w}_{des}) \|^2 + \frac{\lambda_{dir}}{2} \| P_{\perp} B_{rp}\mathbf{u} \|^2 + \frac{\rho_v}{2} \| \mathbf{u} - \mathbf{u}_{prev} \|^2
 $$
 
 **Subject to:**
@@ -71,10 +71,10 @@ Under sustained saturation (~80% of the flight), the QP allocator maintains traj
 ![Trajectory Comparison](./images/aggressive_circle_comparison.png)
 *Figure: Comparison of aggressive circular trajectories. (a) QP Allocator maintains the radius. (b) Standard Mixer deforms and drifts.*
 
-| Scenario | RMS XY Error [m] | RMS Yaw Error [deg] | Directional Alignment ($c \ge 0.99$) |
-| :--- | :---: | :---: | :---: |
-| **QP Allocator** | **12.84** | **7.46°** | **99.4%** |
-| Standard Mixer (CFI) | 14.25 | 9.70° | 51.4% |
+| Scenario | RMS XY Error [m] | RMS Roll Error [deg] | RMS Pitch Error [deg] | Directional Alignment ($c \ge 0.99$) | 
+| :--- | :---: | :---: | :---: | :---: |
+| **QP Allocator** | **12.84** | **1.61°** | **1.57°** | **99.4%** |
+| Standard Mixer (CFI) | 14.25 | **5.52°** | **5.68°** | 51.4% |
 
 **Key Finding:** The QP allocator reduces attitude error significantly and maintains directional alignment almost 100% of the time, even when motors are maxed out.
 
