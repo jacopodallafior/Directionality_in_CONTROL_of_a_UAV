@@ -100,7 +100,7 @@ This code is based on the research performed at the University of Trento.
 # Clone the repository and switch to the correct branch
 mkdir -p uav_control_ws/src
 cd uav_control_ws/src
-git clone -b CODETRY [https://github.com/jacopodallafior/ros2init/tree/CODETRY.git](https://github.com/jacopodallafior/ros2init/tree/CODETRY.git)
+git clone -b CODETRY [https://github.com/jacopodallafior/ros2init.git](https://github.com/jacopodallafior/ros2init.git)
 
 # Install OSQP (if not strictly linked in CMake)
 # Ensure Eigen is available
